@@ -2,6 +2,6 @@
 	import '../app.css';
 </script>
 
-<div class="absolute w-full top-36">
+<div class="absolute top-36 w-full">
 	<slot />
 </div>

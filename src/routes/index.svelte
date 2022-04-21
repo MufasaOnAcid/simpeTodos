@@ -20,7 +20,7 @@
 
 	let todos = [];
 
-	const unsubscribe = onSnapshot(colRef, (querySnapshot) => {
+	onSnapshot(colRef, (querySnapshot) => {
 		let fbTodos = [];
 		querySnapshot.forEach((doc) => {
 			let todo = { ...doc.data(), id: doc.id };
@@ -34,7 +34,7 @@
 
 	const addTask = async () => {
 		if (task !== '') {
-			const docRef = await addDoc(collection(db, 'todos'), {
+			await addDoc(collection(db, 'todos'), {
 				task: task,
 				isComplete: false,
 				createdAt: new Date()
@@ -62,23 +62,23 @@
 	};
 </script>
 
-<div class="max-w-md lg:w-1/2 h-full my-auto flex flex-col gap-8 mx-auto">
-	<div class="flex shadow-md ring-2 ring-black rounded-md items-center justify-between ">
+<div class="my-auto mx-auto flex h-full max-w-md flex-col gap-8 lg:w-1/2">
+	<div class="flex items-center justify-between rounded-md shadow-md ring-2 ring-black ">
 		<input
-			class="p-2 w-full rounded-tl-md outline-none rounded-bl-md"
+			class="w-full rounded-tl-md rounded-bl-md p-2 outline-none"
 			type="text"
 			placeholder="Add a task"
 			bind:value={task}
 		/>
-		<button class="bg-blue-400 p-2 w-1/4 rounded-tr-md rounded-br-md" on:click={addTask}>Add</button
+		<button class="w-1/4 rounded-tr-md rounded-br-md bg-blue-400 p-2" on:click={addTask}>Add</button
 		>
 	</div>
 
-	<div class={todos.length > 0 ? 'ring-2 ring-black rounded-md' : ''}>
-		<ol class="list-decimal w-full">
+	<div class={todos.length > 0 ? 'rounded-md ring-2 ring-black' : ''}>
+		<ol class="w-full list-decimal">
 			{#each todos as item}
 				<li
-					class="flex items-center justify-between px-4 py-2 gap-4 {item.isComplete
+					class="flex items-center justify-between gap-4 px-4 py-2 {item.isComplete
 						? 'line-through'
 						: ''}"
 				>
@@ -87,7 +87,7 @@
 						<button on:click={() => markTaskAsComplete(item)}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								class="w-6 h-6 text-green-600"
+								class="h-6 w-6 text-green-600"
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke="currentColor"
