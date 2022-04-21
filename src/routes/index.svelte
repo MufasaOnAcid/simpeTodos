@@ -62,7 +62,7 @@
 	};
 </script>
 
-<div class="my-auto mx-auto flex h-full max-w-md flex-col gap-8 lg:w-1/2">
+<div class="my-auto mx-auto flex h-full px-4 max-w-md flex-col gap-8 lg:w-1/2">
 	<div class="flex items-center justify-between rounded-md shadow-md ring-2 ring-black ">
 		<input
 			class="w-full rounded-tl-md rounded-bl-md p-2 outline-none"
