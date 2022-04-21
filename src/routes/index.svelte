@@ -1,16 +1,44 @@
 <script>
+	import { initializeApp } from 'firebase/app';
+	import {
+		getFirestore,
+		collection,
+		onSnapshot,
+		doc,
+		updateDoc,
+		deleteDoc,
+		addDoc
+	} from 'firebase/firestore';
+	import { firebaseConfig } from '$lib/firebaseConfig';
+	// const app = initializeApp(firebaseConfig);
+	// const db = getFirestore(app);
+	const app = initializeApp(firebaseConfig);
+
+	const db = getFirestore(app);
+
+	const colRef = collection(db, 'todos');
+
 	let todos = [];
+
+	const unsubscribe = onSnapshot(colRef, (querySnapshot) => {
+		let fbTodos = [];
+		querySnapshot.forEach((doc) => {
+			let todo = { ...doc.data(), id: doc.id };
+			fbTodos = [todo, ...fbTodos];
+		});
+		todos = fbTodos;
+	});
+
 	let task = '';
 	let error = '';
 
-	const addTask = () => {
-		let newTask = {
-			task: task,
-			isComplete: false,
-			createdAt: new Date()
-		};
+	const addTask = async () => {
 		if (task !== '') {
-			todos = [...todos, newTask];
+			const docRef = await addDoc(collection(db, 'todos'), {
+				task: task,
+				isComplete: false,
+				createdAt: new Date()
+			});
 			error = '';
 		} else {
 			error = 'You have not typed anything';
@@ -18,12 +46,13 @@
 		task = '';
 	};
 
-	const markTaskAsComplete = (index) => {
-		todos[index].isComplete = !todos[index].isComplete;
+	const markTaskAsComplete = async (item) => {
+		await updateDoc(doc(db, 'todos', item.id), {
+			isComplete: !item.isComplete
+		});
 	};
-	const removeTask = (index) => {
-		let deleteItem = todos[index];
-		todos = todos.filter((item) => item != deleteItem);
+	const removeTask = async (id) => {
+		await deleteDoc(doc(db, 'todos', id));
 	};
 
 	const keyIsPressed = (event) => {
@@ -47,15 +76,15 @@
 
 	<div class={todos.length > 0 ? 'ring-2 ring-black rounded-md' : ''}>
 		<ol class="list-decimal w-full">
-			{#each todos as todo, index}
+			{#each todos as item}
 				<li
-					class="flex items-center justify-between px-4 py-2 gap-4 {todo.isComplete
+					class="flex items-center justify-between px-4 py-2 gap-4 {item.isComplete
 						? 'line-through'
 						: ''}"
 				>
-					<span>{todo.task}</span>
+					<span>{item.task}</span>
 					<span class="flex items-center gap-2">
-						<button on:click={() => markTaskAsComplete(index)}>
+						<button on:click={() => markTaskAsComplete(item)}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="w-6 h-6 text-green-600"
@@ -67,7 +96,7 @@
 								<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
 							</svg>
 						</button>
-						<button on:click={() => removeTask(index)}>
+						<button on:click={() => removeTask(item.id)}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="h-6 w-6 text-red-500"
