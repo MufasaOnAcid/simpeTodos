@@ -1,0 +1,31 @@
+{
+  "short_name": "Todos",
+  "name": "Simple Todos",
+  "icons": [
+    {
+      "src": "/assets/icon1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon2.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon3.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon4.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#e05a47",
+  "theme_color": "#e05a47",
+  "scope": "/",
+  "display": "standalone"
+}
